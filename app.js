@@ -20,11 +20,12 @@ app.get('/', function(req, res) {
 
 app.post('/results', function(req, res) {
 	rebloggerAvatarURLs = [];
+	tags = [];
 	console.log(req.body.url);
 	getReblogInfo(req.body.url);
 
 	eventEmitter.on('send data', function() {
-		res.render('results.jade', { urls: rebloggerAvatarURLs });
+		res.render('results.jade', { urls: rebloggerAvatarURLs, tags: tags });
 	});
 
 });
@@ -38,13 +39,12 @@ eventEmitter.on('got all data', processTumblrData);
 
 
 var client = tumblr.createClient({
-	consumer_key: '<consumer_key>',
-	consumer_secret: '<consumer_secret>',
-	token: '<oauth token>',
-	token_secret: '<oauth token secret>'
+	consumer_key: '',
+	consumer_secret: ''
 });
 
-var rebloggerAvatarURLs = [];
+var rebloggerAvatarURLs = [],
+	tags = [];
 
 function getReblogInfo(blogURL) {
 
@@ -66,8 +66,9 @@ function getReblogInfo(blogURL) {
 
 	client.posts(blogName, options, function(err, data){
 
-		if (data.posts[0].reblogged_from_url) {
-			console.log(data.posts[0]);
+		if (!err && data.posts[0].reblogged_from_url) {
+			console.log(data.posts[0].tags);
+			tags.push(data.posts[0].tags);
 			rebloggedURL = data.posts[0].reblogged_from_url;
 			parsedReblogURL = url.parse(rebloggedURL);
 			host = parsedReblogURL.host;
@@ -85,7 +86,9 @@ function getReblogInfo(blogURL) {
 function getRebloggerInfo(blogName) {
 
 	client.avatar(blogName, 512, function(err, data) {
-		rebloggerAvatarURLs.push(data.avatar_url);
+		if (!err) {
+			rebloggerAvatarURLs.push(data.avatar_url);
+		}
 	});
 
 }
@@ -117,5 +120,6 @@ function processTumblrData() {
 
 
 
-server.listen(3000);
-console.log('Listening on port 3000');
+var port = process.env.PORT || 3000;
+app.listen(port);
+console.log('listening on ' + port);
