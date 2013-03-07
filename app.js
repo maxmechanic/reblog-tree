@@ -15,14 +15,13 @@ app.get('/', function(req, res) {
 	res.render('index.jade');
 
 });
-	
 
 
 app.post('/results', function(req, res) {
-	rebloggerAvatarURLs = [];
-	tags = [];
+	var rebloggerAvatarURLs = [];
+	var tags = [];
 	console.log(req.body.url);
-	getReblogInfo(req.body.url);
+	getReblogInfo(req.body.url, rebloggerAvatarURLs, tags);
 
 	eventEmitter.on('send data', function() {
 		res.render('results.jade', { urls: rebloggerAvatarURLs, tags: tags });
@@ -36,6 +35,7 @@ var eventEmitter = new events.EventEmitter();
 
 eventEmitter.on('got post data', checkForReblogs);
 eventEmitter.on('got all data', processTumblrData);
+eventEmitter.on('start calls', getReblogInfo);
 
 
 var client = tumblr.createClient({
@@ -43,10 +43,10 @@ var client = tumblr.createClient({
 	consumer_secret: ''
 });
 
-var rebloggerAvatarURLs = [],
-	tags = [];
+// var rebloggerAvatarURLs = [],
+// 	tags = [];
 
-function getReblogInfo(blogURL) {
+function getReblogInfo(blogURL, rebloggerAvatarURLs, tags) {
 
 	var parsedURL = url.parse(blogURL);
 	var blogName = parsedURL.host;
@@ -62,7 +62,7 @@ function getReblogInfo(blogURL) {
 		reblog_info: true
 	};
 
-	getRebloggerInfo(blogName);
+	getRebloggerInfo(blogName, rebloggerAvatarURLs);
 
 	client.posts(blogName, options, function(err, data){
 
@@ -74,7 +74,7 @@ function getReblogInfo(blogURL) {
 			host = parsedReblogURL.host;
 		}
 
-		eventEmitter.emit('got post data', { rebloggedURL: rebloggedURL, host: host});
+		eventEmitter.emit('got post data', { rebloggedURL: rebloggedURL, host: host, avatars: rebloggerAvatarURLs, tags: tags});
 
 
 	});
@@ -83,7 +83,7 @@ function getReblogInfo(blogURL) {
 }
 
 
-function getRebloggerInfo(blogName) {
+function getRebloggerInfo(blogName, rebloggerAvatarURLs) {
 
 	client.avatar(blogName, 512, function(err, data) {
 		if (!err) {
@@ -95,7 +95,7 @@ function getRebloggerInfo(blogName) {
 
 function checkForReblogs(results) {
 	if (results.host) {
-		getReblogInfo(results.rebloggedURL);
+		getReblogInfo(results.rebloggedURL, results.avatars, results.tags);
 	}
 
 	else {
@@ -106,7 +106,6 @@ function checkForReblogs(results) {
 
 function processTumblrData() {
 	console.log('successfully got all data');
-	console.log(rebloggerAvatarURLs);
 	eventEmitter.emit('send data');
 }
 
