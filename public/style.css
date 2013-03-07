@@ -22,15 +22,18 @@ input {
 .post {
 	border: 3px solid black;
 	display: inline-block;
+	width: 250px;
+	height: 250px;
+	vertical-align: top;
 }
 
 p {
 	text-align: center;
-	overflow: auto;
-	padding:15px;
-	max-width: 600px;
+	max-width: 225px;
 	font-weight: bold;
-	font-size: 150%;
+	font-size: 110%;
+	margin: 0 auto;
+
 }
 
 .footer {
