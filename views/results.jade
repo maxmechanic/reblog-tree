@@ -4,5 +4,7 @@ html(lang="en")
 		link(rel="stylesheet", href="style.css")
 	body
 		.main
-			each avatar in urls
-					img(src=avatar)
+			each avatar, i in urls
+					.post
+						img(src=avatar)
+						p #{tags[i]}
