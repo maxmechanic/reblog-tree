@@ -15,9 +15,11 @@ app.get('/', function(req, res) {
 	res.render('index.jade');
 
 });
+	
+
 
 app.post('/results', function(req, res) {
-
+	rebloggerAvatarURLs = [];
 	console.log(req.body.url);
 	getReblogInfo(req.body.url);
 
@@ -65,6 +67,7 @@ function getReblogInfo(blogURL) {
 	client.posts(blogName, options, function(err, data){
 
 		if (data.posts[0].reblogged_from_url) {
+			console.log(data.posts[0]);
 			rebloggedURL = data.posts[0].reblogged_from_url;
 			parsedReblogURL = url.parse(rebloggedURL);
 			host = parsedReblogURL.host;
@@ -81,7 +84,7 @@ function getReblogInfo(blogURL) {
 
 function getRebloggerInfo(blogName) {
 
-	client.avatar(blogName, function(err, data) {
+	client.avatar(blogName, 512, function(err, data) {
 		rebloggerAvatarURLs.push(data.avatar_url);
 	});
 
