@@ -3,12 +3,29 @@ var express = require('express'),
 	request = require('request'),
 	tumblr = require('tumblr.js');
 
-// var app = express(),
-// 	server = require('http').createServer(app);
+var app = express(),
+	server = require('http').createServer(app);
 
-// app.use(express.bodyParser()),
-// 	app.use(express.static(__dirname + '/public')),
-// 	app.use(express.logger());
+app.use(express.bodyParser()),
+	app.use(express.static(__dirname + '/public')),
+	app.use(express.logger());
+
+app.get('/', function(req, res) {
+
+	res.render('index.jade');
+
+});
+
+app.post('/results', function(req, res) {
+
+	console.log(req.body.url);
+	getReblogInfo(req.body.url);
+
+	eventEmitter.on('send data', function() {
+		res.render('results.jade', { urls: rebloggerAvatarURLs });
+	});
+
+});
 
 var events = require('events');
 
@@ -17,6 +34,7 @@ var eventEmitter = new events.EventEmitter();
 eventEmitter.on('got post data', checkForReblogs);
 eventEmitter.on('got all data', processTumblrData);
 
+
 var client = tumblr.createClient({
 	consumer_key: '<consumer_key>',
 	consumer_secret: '<consumer_secret>',
@@ -24,7 +42,7 @@ var client = tumblr.createClient({
 	token_secret: '<oauth token secret>'
 });
 
-var rebloggerAvatarURIs = [];
+var rebloggerAvatarURLs = [];
 
 function getReblogInfo(blogURL) {
 
@@ -57,8 +75,6 @@ function getReblogInfo(blogURL) {
 
 	});
 
-	
-
 
 }
 
@@ -66,7 +82,7 @@ function getReblogInfo(blogURL) {
 function getRebloggerInfo(blogName) {
 
 	client.avatar(blogName, function(err, data) {
-		rebloggerAvatarURIs.push(data.avatar_url);
+		rebloggerAvatarURLs.push(data.avatar_url);
 	});
 
 }
@@ -84,10 +100,11 @@ function checkForReblogs(results) {
 
 function processTumblrData() {
 	console.log('successfully got all data');
-	console.log(rebloggerAvatarURIs);
+	console.log(rebloggerAvatarURLs);
+	eventEmitter.emit('send data');
 }
 
-getReblogInfo('http://www.kungfugrippe.com/post/44632726681/thehawkguy-this-is-kate-bishop-kate-took');
+// getReblogInfo('http://www.kungfugrippe.com/post/44632726681/thehawkguy-this-is-kate-bishop-kate-took');
 
 
 // client.posts('copperbadge.tumblr.com', {id: 44649533213, reblog_info: true} , function(err, data) {
@@ -97,5 +114,5 @@ getReblogInfo('http://www.kungfugrippe.com/post/44632726681/thehawkguy-this-is-k
 
 
 
-// server.listen(3000);
-// console.log('Listening on port 3000');
+server.listen(3000);
+console.log('Listening on port 3000');
