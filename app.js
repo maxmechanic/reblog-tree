@@ -84,7 +84,7 @@ function getReblogInfo(blogURL, rebloggerAvatarURLs, tags) {
 
 function getRebloggerInfo(blogName, rebloggerAvatarURLs) {
 
-	client.avatar(blogName, 512, function(err, data) {
+	client.avatar(blogName, 128, function(err, data) {
 		if (!err) {
 			rebloggerAvatarURLs.push(data.avatar_url);
 		}
