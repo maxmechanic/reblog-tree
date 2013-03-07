@@ -29,10 +29,11 @@ input {
 
 p {
 	text-align: center;
-	max-width: 225px;
+	max-width: 90%;
+	max-height: 25%;
 	font-weight: bold;
-	font-size: 110%;
 	margin: 0 auto;
+	overflow: auto;
 
 }
 
