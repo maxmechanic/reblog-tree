@@ -16,7 +16,6 @@ app.get('/', function(req, res) {
 
 });
 
-
 app.post('/results', function(req, res) {
 	var rebloggerAvatarURLs = [];
 	var tags = [];
@@ -108,16 +107,6 @@ function processTumblrData() {
 	console.log('successfully got all data');
 	eventEmitter.emit('send data');
 }
-
-// getReblogInfo('http://www.kungfugrippe.com/post/44632726681/thehawkguy-this-is-kate-bishop-kate-took');
-
-
-// client.posts('copperbadge.tumblr.com', {id: 44649533213, reblog_info: true} , function(err, data) {
-// 	console.log(data);
-// });
-
-
-
 
 var port = process.env.PORT || 3000;
 app.listen(port);
