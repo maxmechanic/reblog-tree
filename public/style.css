@@ -3,6 +3,32 @@
 	text-align: center;
 }
 
+.prompt {
+	padding-top: 75px;
+}
+
 img {
 	padding: 25px;
+}
+
+input {
+	line-height: 150%;
+	padding: 5px;
+	font-size: 125%;
+	width: 50%;
+
+}
+
+.post {
+	border: 2px solid black;
+	display: inline-block;
+}
+
+p {
+	text-align: center;
+	overflow: auto;
+	padding:15px;
+	max-width: 600px;
+	font-weight: bold;
+	font-size: 150%;
 }
