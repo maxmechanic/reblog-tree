@@ -4,6 +4,7 @@ html(lang="en")
 		link(rel="stylesheet", href="style.css")
 	body
 		.main
-			form(method="post", action="/results")
-				label URL
-				input(type="text", name="url")
+			.prompt
+				h1 Enter a tumblr post URL.
+				form(id="inputForm", method="post", action="/results")
+					input(type="text", name="url", length=50)
