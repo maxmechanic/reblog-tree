@@ -1,7 +1,11 @@
-var express = require('express'),
-	url	= require('url'),
-	request = require('request'),
-	tumblr = require('tumblr.js');
+var express  = require('express'),
+	url      = require('url'),
+	request  = require('request'),
+	tumblr   = require('tumblr.js'),
+	config = require('./config.js');
+
+var consumer = new config();
+console.log(consumer);
 
 var app = express(),
 	server = require('http').createServer(app);
@@ -36,14 +40,10 @@ eventEmitter.on('got post data', checkForReblogs);
 eventEmitter.on('got all data', processTumblrData);
 eventEmitter.on('start calls', getReblogInfo);
 
-
 var client = tumblr.createClient({
-	consumer_key: '',
-	consumer_secret: ''
+	consumer_key: consumer.key,
+	consumer_secret: consumer.secret
 });
-
-// var rebloggerAvatarURLs = [],
-// 	tags = [];
 
 function getReblogInfo(blogURL, rebloggerAvatarURLs, tags) {
 
