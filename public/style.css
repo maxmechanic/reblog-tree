@@ -25,6 +25,7 @@ input {
 	width: 250px;
 	height: 250px;
 	vertical-align: top;
+	margin: 10px;
 }
 
 p {
