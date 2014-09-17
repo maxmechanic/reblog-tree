@@ -1,13 +1,13 @@
-doctype 5
+doctype html
 html(lang="en")
-	head
-		link(rel="stylesheet", href="style.css")
-	body
-		.main
-			.prompt
-				h1 Enter a tumblr post URL.
-				form(id="inputForm", method="post", action="/results")
-					input(type="text", name="url", length=50)
-		.footer
-			.source
-				a(href="https://github.com/maxmechanic/reblog-tree") Source	
+  head
+    link(rel="stylesheet", href="style.css")
+  body
+    .main
+      .prompt
+          h1 Enter a tumblr post URL.
+          form(id="inputForm", method="post", action="/results")
+            input(type="text", name="url", length=50)
+    .footer
+      .source
+        a(href="https://github.com/maxmechanic/reblog-tree") Source
